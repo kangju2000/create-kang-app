@@ -1,0 +1,22 @@
+{
+	"name": "create-kang-app",
+	"version": "1.0.0",
+	"description": "",
+	"engines": {
+		"node": ">=16"
+	},
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"execa": "^8.0.1",
+		"listr": "^0.14.3",
+		"meow": "^13.0.0",
+		"slugify": "^1.6.6",
+		"yargs": "^17.7.2"
+	}
+}
