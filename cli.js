@@ -51,7 +51,7 @@ tasks.run().then(() => {
 		'',
 		'프로젝트를 실행하려면 아래 명령어를 입력하세요.',
 		'',
-		`  ${relativePath}$ npm run dev`,
+    relativePath === '' ? '  npm run dev' : `  cd ${relativePath} && npm run dev`,
 		''
 	].join('\n'));
 }).catch((err) => {
