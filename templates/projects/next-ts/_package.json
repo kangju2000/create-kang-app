@@ -1,6 +1,6 @@
 {
-  "name": "next-ts",
-  "version": "0.1.0",
+  "name": "%NAME%",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
