@@ -1,8 +1,9 @@
 import { execa } from 'execa';
 import Listr from 'listr';
-import meow from 'meow'
-import path from 'node:path'
+import meow from 'meow';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { select } from '@inquirer/prompts';
 
 const cli = meow(
   `
@@ -25,7 +26,7 @@ const cli = meow(
       },
     },
   }
-)
+);
 
 const projectDirectoryPath = path.resolve(process.cwd(), cli.input[0] || '.');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -33,27 +34,44 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const templatePath = path.resolve(__dirname, `templates/${cli.flags.template}`);
 const relativePath = path.relative(process.cwd(), projectDirectoryPath);
 
+async function getTemplateChoices() {
+  const templateChoices = await select({
+    message: '템플릿을 선택하세요.',
+    choices: [
+      { title: 'Next.js + TypeScript', value: 'next-ts' },
+      { title: 'React + TypeScript + Vite', value: 'vite-ts' },
+      { title: 'Node.js + TypeScript', value: 'node-ts' },
+      { title: 'Node.js  + JavaScript', value: 'node-js' },
+    ],
+  });
+}
+
 const tasks = new Listr([
   {
     title: '템플릿을 복사합니다.',
-    task: () => execa('cp', ['-a', templatePath +'/.', projectDirectoryPath])
+    task: () => execa('cp', ['-a', templatePath + '/.', projectDirectoryPath]),
   },
   {
     title: 'dependencies를 설치합니다.',
-    task: () => execa('npm', ['install'], { cwd: projectDirectoryPath })
-  }
-])
+    task: () => execa('npm', ['install'], { cwd: projectDirectoryPath }),
+  },
+]);
 
-tasks.run().then(() => {
-	console.log([
-		'',
-		'🎉 프로젝트가 성공적으로 생성되었습니다.',
-		'',
-		'프로젝트를 실행하려면 아래 명령어를 입력하세요.',
-		'',
-    relativePath === '' ? '  npm run dev' : `  cd ${relativePath} && npm run dev`,
-		''
-	].join('\n'));
-}).catch((err) => {
-  console.error(err);
-})
+tasks
+  .run()
+  .then(() => {
+    console.log(
+      [
+        '',
+        '🎉 프로젝트가 성공적으로 생성되었습니다.',
+        '',
+        '프로젝트를 실행하려면 아래 명령어를 입력하세요.',
+        '',
+        relativePath === '' ? '  npm run dev' : `  cd ${relativePath} && npm run dev`,
+        '',
+      ].join('\n')
+    );
+  })
+  .catch((err) => {
+    console.error(err);
+  });
