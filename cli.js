@@ -97,17 +97,17 @@ const copyWithTemplate = async (from, to, variables) => {
   await fs.writeFile(to, generatedSource);
 };
 
-const execaInProject = async (command, args, options) => {
-  return execa(command, args, { ...options, cwd: projectDirectoryPath });
-};
-
-const projectDirectoryPath = path.resolve(process.cwd(), cli.input[0] || '.');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 (async () => {
+  const execaInProject = async (command, args, options) => {
+    return execa(command, args, { ...options, cwd: projectDirectoryPath });
+  };
+
   const projectTemplate = cli.flags.template || (await readProjectTemplate());
   const packageManager = await readPackageManager();
   const confirmLint = await readConfirmLint();
+  const projectDirectoryPath = path.resolve(process.cwd(), cli.input[0] || `./${projectTemplate}`);
 
   const pkgName = slugify(path.basename(projectDirectoryPath));
   const templateConfigsPath = path.resolve(__dirname, 'templates/configs');
